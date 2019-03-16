@@ -30,5 +30,6 @@ private:
 		"assets/skybox/front.jpg",
 		"assets/skybox/back.jpg"
 	};
+	void cleanup();
 };
 

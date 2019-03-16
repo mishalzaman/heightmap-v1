@@ -77,3 +77,9 @@ void OpenglSystem::enableWireframe(bool state)
 {
 	state ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
+
+void OpenglSystem::culling()
+{
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+}

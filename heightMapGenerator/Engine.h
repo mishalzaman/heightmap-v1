@@ -20,7 +20,7 @@ public:
 	~Engine();
 	void initializeSystem();
 	void shutDownSystem();
-	void initialize(unsigned int width, unsigned int height);
+	void initialize();
 	void load();
 	void update(float deltaTime);
 	void render();

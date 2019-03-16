@@ -19,6 +19,7 @@ namespace OpenglSystem {
 	void enableDepthTest(bool state);
 	void setMouseToCenter(SDL_Window* window, unsigned int width, unsigned int height);
 	void enableWireframe(bool state);
+	void culling();
 }
 
 #endif

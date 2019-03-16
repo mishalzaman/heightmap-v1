@@ -31,9 +31,9 @@ void Engine::shutDownSystem()
 	OpenglSystem::cleanUp(this->context, this->window);
 }
 
-void Engine::initialize(unsigned int width, unsigned int height)
+void Engine::initialize()
 {
-	this->terrein = new Terrein(width, height);
+	this->terrein = new Terrein();
 	this->input = new Input();
 	this->uniformBufferMatrices = new UniformBufferMatrices();
 	this->camera = new CameraFP(this->screenWidth, this->screenHeight);
@@ -45,7 +45,7 @@ void Engine::load()
 	this->projection = glm::perspective(glm::radians(45.0f), (float)this->screenWidth / (float)this->screenHeight, 0.1f, 100.0f);
 	this->uniformBufferMatrices->updateUBOMatricesProjection(projection);
 	this->skybox->load();
-	this->terrein->build();	
+	this->terrein->load(64);
 }
 
 void Engine::update(float deltaTime)
@@ -71,6 +71,7 @@ void Engine::update(float deltaTime)
 void Engine::render()
 {
 	this->skybox->draw();
+	OpenglSystem::enableWireframe(true);
 	this->terrein->render();
 }
 

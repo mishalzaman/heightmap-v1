@@ -11,7 +11,7 @@ Engine* engine = new Engine(width, height);
 int main(int argc, char *argv[])
 {
 	engine->initializeSystem();
-	engine->initialize(5, 5);
+	engine->initialize();
 	engine->load();
 
 	float deltaTime, lastTime = 0.0f;

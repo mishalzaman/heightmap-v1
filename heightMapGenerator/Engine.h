@@ -12,6 +12,7 @@ class Input;
 class UniformBufferMatrices;
 class CameraFP;
 class SkyBox;
+class Lamp;
 
 class Engine
 {
@@ -37,6 +38,7 @@ private:
 	UniformBufferMatrices* uniformBufferMatrices;
 	CameraFP* camera;
 	SkyBox* skybox;
+	Lamp* lamp;
 	glm::mat4 projection;
 	glm::mat4 view;
 };

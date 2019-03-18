@@ -133,6 +133,7 @@
     <ClCompile Include="CameraFP.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Lamp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkyBox.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="CameraFP.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Lamp.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="stb_image.h" />
@@ -155,6 +157,8 @@
   <ItemGroup>
     <None Include="shaders\basic.frag" />
     <None Include="shaders\basic.vert" />
+    <None Include="shaders\lamp.frag" />
+    <None Include="shaders\lamp.vert" />
     <None Include="shaders\skybox.frag" />
     <None Include="shaders\skybox.vert" />
   </ItemGroup>

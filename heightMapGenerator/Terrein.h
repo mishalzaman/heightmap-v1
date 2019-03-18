@@ -10,6 +10,11 @@
 
 class Shader;
 
+struct MeshV3 {
+	glm::vec3 position;
+	glm::vec3 normal;
+};
+
 class Terrein
 {
 public:
@@ -20,8 +25,8 @@ public:
 	void cleanup();
 private:
 	unsigned int mapSize;
-	std::vector<glm::vec3> vertices;
 	std::vector<glm::uvec3> indices;
+	std::vector<MeshV3> mesh;
 	unsigned int VBO;
 	unsigned int VAO;
 	unsigned int IBO;

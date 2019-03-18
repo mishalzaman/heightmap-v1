@@ -2,6 +2,7 @@
 #include "Terrein.h"
 #include "Input.h"
 #include "SkyBox.h"
+#include "Lamp.h"
 
 Engine::Engine(unsigned int width, unsigned int height)
 {
@@ -38,6 +39,7 @@ void Engine::initialize()
 	this->uniformBufferMatrices = new UniformBufferMatrices();
 	this->camera = new CameraFP(this->screenWidth, this->screenHeight);
 	this->skybox = new SkyBox();
+	this->lamp = new Lamp();
 }
 
 void Engine::load()
@@ -46,6 +48,7 @@ void Engine::load()
 	this->uniformBufferMatrices->updateUBOMatricesProjection(projection);
 	this->skybox->load();
 	this->terrein->load(64);
+	this->lamp->load();
 }
 
 void Engine::update(float deltaTime)
@@ -71,8 +74,9 @@ void Engine::update(float deltaTime)
 void Engine::render()
 {
 	this->skybox->draw();
-	OpenglSystem::enableWireframe(true);
+	// OpenglSystem::enableWireframe(true);
 	this->terrein->render();
+	this->lamp->render();
 }
 
 bool Engine::isShutDown()

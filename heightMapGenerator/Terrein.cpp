@@ -33,11 +33,15 @@ void Terrein::build()
 			float x = (float)j / (float)this->mapSize;
 			float y = (float)i / (float)this->mapSize;
 
-			// float pixel = this->imageData[this->imageWidth * (j*this->imageWidth/this->mapSize) + (i*this->imageWidth/this->mapSize)];
 			float pixel = this->imageData[this->imageWidth * j + i];
 
 			float z = float(pixel/256.0);
-			this->vertices.push_back(glm::vec3(x, y, z));
+	
+			MeshV3 mesh;
+			mesh.position = glm::vec3(x, y, z);
+			mesh.normal = glm::vec3(0, 1, 0);
+
+			this->mesh.push_back(mesh);
 		}
 	}
 
@@ -63,22 +67,21 @@ void Terrein::build()
 	glBindVertexArray(this->VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-	glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(glm::vec3), glm::value_ptr(this->vertices[0]), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, this->mesh.size() * sizeof(MeshV3), &this->mesh[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->IBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(glm::uvec3), glm::value_ptr(this->indices[0]), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	// positions
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshV3), (void*)0);
 
-	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+	// normals
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(MeshV3), (void*)offsetof(MeshV3, normal));
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	// remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-	// VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
 	glBindVertexArray(0);
 }
 

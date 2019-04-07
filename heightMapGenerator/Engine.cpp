@@ -2,7 +2,8 @@
 #include "Terrein.h"
 #include "Input.h"
 #include "SkyBox.h"
-#include "Lamp.h"
+#include "Light.h"
+#include "FrameBuffer.h"
 
 Engine::Engine(unsigned int width, unsigned int height)
 {
@@ -39,7 +40,8 @@ void Engine::initialize()
 	this->uniformBufferMatrices = new UniformBufferMatrices();
 	this->camera = new CameraFP(this->screenWidth, this->screenHeight);
 	this->skybox = new SkyBox();
-	this->lamp = new Lamp();
+	this->light = new Light(glm::vec3(40, 10, 40));
+	this->framebuffer = new FrameBuffer(this->screenWidth, this->screenHeight);
 }
 
 void Engine::load()
@@ -47,17 +49,36 @@ void Engine::load()
 	this->projection = glm::perspective(glm::radians(45.0f), (float)this->screenWidth / (float)this->screenHeight, 0.1f, 100.0f);
 	this->uniformBufferMatrices->updateUBOMatricesProjection(projection);
 	this->skybox->load();
-	this->terrein->load(64);
-	this->lamp->load();
+	this->terrein->load(388);
+	this->light->load();
+	this->framebuffer->load();
 }
 
 void Engine::update(float deltaTime)
 {
+	glm::vec3 lightPosition = this->light->getPosition();
+
 	this->input->update(deltaTime);
 	if (this->input->isForward()) { camera->forward(deltaTime); };
 	if (this->input->isBackward()) { camera->backward(deltaTime); };
 	if (this->input->isStrafeLeft()) { camera->strafeLeft(deltaTime); };
 	if (this->input->isStrafeRight()) { camera->strafeRight(deltaTime); };
+	if (this->input->isArrowForward()) 
+	{ 
+		this->light->updatePosition(glm::vec3(lightPosition.x, lightPosition.y, lightPosition.z - 0.1));
+	};
+	if (this->input->isArrowBackward())
+	{
+		this->light->updatePosition(glm::vec3(lightPosition.x, lightPosition.y, lightPosition.z + 0.1));
+	};
+	if (this->input->isArrowLeft())
+	{
+		this->light->updatePosition(glm::vec3(lightPosition.x - 0.1, lightPosition.y, lightPosition.z));
+	};
+	if (this->input->isArrowRight())
+	{
+		this->light->updatePosition(glm::vec3(lightPosition.x + 0.1, lightPosition.y, lightPosition.z));
+	};
 	if (this->input->isMouseMotion())
 	{
 		int x, y;
@@ -73,10 +94,19 @@ void Engine::update(float deltaTime)
 
 void Engine::render()
 {
-	this->skybox->draw();
+	this->framebuffer->firstPass();
 	// OpenglSystem::enableWireframe(true);
-	this->terrein->render();
-	this->lamp->render();
+	OpenglSystem::enableCulling(true);
+	this->terrein->draw(*this->camera, this->light->getPosition());
+	OpenglSystem::enableCulling(false);
+	this->light->draw();
+	this->skybox->draw();
+	// OpenglSystem::enableWireframe(false);
+
+	this->framebuffer->secondPass();
+	this->framebuffer->render();
+
+	SDL_GL_SwapWindow(this->window);
 }
 
 bool Engine::isShutDown()

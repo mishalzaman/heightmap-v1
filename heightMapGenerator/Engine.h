@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <sdl/SDL.h>
 #include "OpenglSystem.h"
-#include "UniformBufferMatrices.h"
+#include "uniform_buffers/UniformBufferMatrices.h"
 #include "CameraFP.h"
 
 class Terrein;
@@ -12,7 +12,8 @@ class Input;
 class UniformBufferMatrices;
 class CameraFP;
 class SkyBox;
-class Lamp;
+class Light;
+class FrameBuffer;
 
 class Engine
 {
@@ -38,7 +39,8 @@ private:
 	UniformBufferMatrices* uniformBufferMatrices;
 	CameraFP* camera;
 	SkyBox* skybox;
-	Lamp* lamp;
+	Light* light;
+	FrameBuffer* framebuffer;
 	glm::mat4 projection;
 	glm::mat4 view;
 };

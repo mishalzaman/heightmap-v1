@@ -1,18 +1,19 @@
-#include "Lamp.h"
+#include "Light.h"
 #include "Shader.h"
 
-Lamp::Lamp()
+Light::Light(glm::vec3 position)
 {
 	this->shader = new Shader("shaders/lamp.vert", "shaders/lamp.frag");
 	this->shader->setUBOMatrices();
+	this->position = position;
 }
 
-Lamp::~Lamp()
+Light::~Light()
 {
 	this->cleanup();
 }
 
-void Lamp::load()
+void Light::load()
 {
 	float vertices[] = {
 	 0.5f,  0.5f, 0.0f,  // top right
@@ -44,22 +45,32 @@ void Lamp::load()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Lamp::update()
+void Light::update()
 {
 }
 
-void Lamp::render()
+void Light::draw()
 {
 	this->shader->use();
 	glBindVertexArray(this->VAO);
 	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0, 10.0, 0.0));
+	model = glm::translate(model, this->position);
 	this->shader->setMat4("model", model);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void Lamp::cleanup()
+glm::vec3 Light::getPosition()
+{
+	return this->position;
+}
+
+void Light::updatePosition(glm::vec3 position)
+{
+	this->position = position;
+}
+
+void Light::cleanup()
 {
 	if (this->VAO) {
 		glDeleteVertexArrays(1, &this->VAO);

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include "stb_image.h"
+#include "CameraFP.h"
 
 class Shader;
 
@@ -21,8 +22,9 @@ public:
 	Terrein();
 	~Terrein();
 	void load(unsigned int mapSize);
-	void render();
+	void draw(CameraFP &camera, glm::vec3 lampPosition);
 	void cleanup();
+	void setScale(float scale);
 private:
 	unsigned int mapSize;
 	std::vector<glm::uvec3> indices;
@@ -34,6 +36,7 @@ private:
 	unsigned char *imageData;
 	int imageWidth;
 	int imageHeight;
+	float scale = -0.32;
 	Shader* shader;
 	void build();
 	void getHeightMapImageData();

@@ -1,3 +1,4 @@
+#include <sdl/SDL.h>
 #include "Terrein.h"
 #include "Shader.h"
 
@@ -5,7 +6,7 @@ using namespace std;
 
 Terrein::Terrein()
 {
-	this->shader = new Shader("shaders/basic.vert", "shaders/basic.frag");
+	this->shader = new Shader("shaders/material.vert", "shaders/material.frag");
 	this->shader->setUBOMatrices();
 }
 
@@ -26,6 +27,11 @@ void Terrein::load(unsigned int mapSize)
 void Terrein::build()
 {
 	// https://stackoverflow.com/questions/47086858/create-a-grid-in-opengl
+	// https://www.learnopengles.com/tag/height-maps/
+
+	cout << this->imageWidth << endl;
+	cout << this->imageHeight << endl;
+
 	for (int i = 0; i <= this->mapSize; ++i)
 	{
 		for (int j = 0; j <= this->mapSize; ++j)
@@ -35,11 +41,11 @@ void Terrein::build()
 
 			float pixel = this->imageData[this->imageWidth * j + i];
 
-			float z = float(pixel/256.0);
+			float z = pixel == 0.0 ? 0.0 : float(pixel / 256.0)*this->scale;
 	
 			MeshV3 mesh;
 			mesh.position = glm::vec3(x, y, z);
-			mesh.normal = glm::vec3(0, 1, 0);
+			mesh.normal = glm::vec3(0.0, 0.0, 0.0);
 
 			this->mesh.push_back(mesh);
 		}
@@ -54,10 +60,27 @@ void Terrein::build()
 
 			// triangle 1
 			this->indices.push_back(glm::uvec3(row1 + i, row1 + i + 1, row2 + i + 1));
+			// printf("%d,%d,%d\n", row1 + i, row1 + i + 1, row2 + i + 1);
 
 			// triangle 2
 			this->indices.push_back(glm::uvec3(row1 + i, row2 + i + 1, row2 + i));
+			// printf("%d,%d,%d\n", row1 + i, row2 + i + 1, row2 + i);
 		}
+	}
+
+	for (int i = 0; i < this->indices.size(); i++)
+	{
+		glm::vec3 v1 = this->mesh[this->indices[i].x].position;
+		glm::vec3 v2 = this->mesh[this->indices[i].y].position;
+		glm::vec3 v3 = this->mesh[this->indices[i].z].position;
+
+		glm::vec3 edge1 = v1 - v2;
+		glm::vec3 edge2 = v1 - v3;
+		glm::vec3 normal = glm::normalize(glm::cross(edge1, edge2));
+
+		this->mesh[this->indices[i].x].normal += normal;
+		this->mesh[this->indices[i].y].normal += normal;
+		this->mesh[this->indices[i].z].normal += normal;
 	}
 
 	glGenVertexArrays(1, &this->VAO);
@@ -87,19 +110,34 @@ void Terrein::build()
 
 void Terrein::getHeightMapImageData()
 {
-	std::string path = "assets/heightmap.png";
+	std::string path = "assets/hm.png";
 	this->imageData = stbi_load(path.c_str(), &this->imageWidth, &this->imageHeight, NULL, 1);
+
+	if (!imageData)
+	{
+		cout << "Coult not load terrein heightmap texture" << endl;
+	}
 }
 
-void Terrein::render()
+void Terrein::draw(CameraFP &camera, glm::vec3 lampPosition)
 {
+	// http://www.rastertek.com/dx11ter02.html
+	float scale = 32.0;
+
 	this->shader->use();
 	glBindVertexArray(this->VAO);
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0, 0.0, 0.0));
-	model = glm::scale(model, glm::vec3(8.0, 8.0, 8.0));
+	model = glm::scale(model, glm::vec3(scale, scale, scale));
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
 	this->shader->setMat4("model", model);
+
+	// light properties
+	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+	this->shader->setVec3("lightColor", lightColor);
+	this->shader->setVec3("lightPos", lampPosition);
+	this->shader->setVec3("objectColor", glm::vec3(0.4f, 0.4f, 0.4f));
+
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawElements(GL_TRIANGLES, (GLsizei)this->indices.size() * 3, GL_UNSIGNED_INT, 0);
 }
@@ -117,4 +155,9 @@ void Terrein::cleanup()
 	if (this->VAO) {
 		glDeleteVertexArrays(1, &this->VAO);
 	}
+}
+
+void Terrein::setScale(float scale)
+{
+	this->scale = scale;
 }

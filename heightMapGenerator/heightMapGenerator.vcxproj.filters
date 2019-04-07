@@ -16,6 +16,9 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{35a70696-3e4c-4c2f-a6e4-67a4c3ebd0e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Uniform Buffers">
+      <UniqueIdentifier>{e63f437b-6eaf-4ba6-8d4b-3c9efd82617b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,9 +36,6 @@
     <ClCompile Include="Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UniformBufferMatrices.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CameraFP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,8 +48,17 @@
     <ClCompile Include="SkyBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Lamp.cpp">
+    <ClCompile Include="FrameBuffer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="uniform_buffers\UniformBufferLight.cpp">
+      <Filter>Uniform Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="uniform_buffers\UniformBufferMatrices.cpp">
+      <Filter>Uniform Buffers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,9 +74,6 @@
     <ClInclude Include="Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UniformBufferMatrices.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CameraFP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -80,8 +86,17 @@
     <ClInclude Include="SkyBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Lamp.h">
+    <ClInclude Include="FrameBuffer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="uniform_buffers\UniformBufferMatrices.h">
+      <Filter>Uniform Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="uniform_buffers\UniformBufferLight.h">
+      <Filter>Uniform Buffers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +116,18 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\lamp.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\material.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\material.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\framebuffer.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\framebuffer.vert">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

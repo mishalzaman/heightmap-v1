@@ -1,5 +1,5 @@
-#ifndef LAMP_H
-#define LAMP_H
+#ifndef LIGHT_H
+#define LIGHT_H
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -7,15 +7,17 @@
 
 class Shader;
 
-class Lamp
+class Light
 {
 public:
-	Lamp();
-	~Lamp();
+	Light(glm::vec3 position);
+	~Light();
 	void load();
 	void update();
-	void render();
+	void draw();
 	void cleanup();
+	glm::vec3 getPosition();
+	void updatePosition(glm::vec3 position);
 private:
 	glm::vec3 position;
 	unsigned int VAO;

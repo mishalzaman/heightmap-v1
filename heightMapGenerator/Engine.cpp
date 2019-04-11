@@ -105,8 +105,6 @@ void Engine::render()
 
 	this->framebuffer->secondPass();
 	this->framebuffer->render();
-
-	SDL_GL_SwapWindow(this->window);
 }
 
 bool Engine::isShutDown()

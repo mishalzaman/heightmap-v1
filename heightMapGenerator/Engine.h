@@ -28,14 +28,14 @@ public:
 	void render();
 	bool isShutDown();
 	SDL_Window* window;
+	SDL_GLContext context;
+	Input* input;
 private:
 	// properties
 	unsigned int screenWidth;
 	unsigned int screenHeight;
 	bool shutDown = false;
-	SDL_GLContext context;
 	Terrein* terrein;
-	Input* input;
 	UniformBufferMatrices* uniformBufferMatrices;
 	CameraFP* camera;
 	SkyBox* skybox;

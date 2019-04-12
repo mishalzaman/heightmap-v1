@@ -13,6 +13,9 @@ Input::~Input()
 void Input::update(float deltaTime)
 {
 	while (SDL_PollEvent(&this->event)) {
+		// Update input events for Imgui
+		ImGui_ImplSDL2_ProcessEvent(&event);
+
 		switch (this->event.type) {
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_w && event.key.repeat == 0) { this->forward = true; }

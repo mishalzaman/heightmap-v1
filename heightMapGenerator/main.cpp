@@ -1,11 +1,8 @@
-
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_sdl.h"
-#include "imgui/imgui_impl_opengl3.h"
 #include <iostream>
 #include <GL/glew.h>
 #include <sdl/SDL.h>
 #include "Engine.h"
+#include "utilities/GUI.h"
 
 const int width = 1280;
 const int height = 720;
@@ -17,23 +14,14 @@ int main(int argc, char *argv[])
 	engine->initialize();
 	engine->load();
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	ImGui::StyleColorsDark();
-	ImGui_ImplSDL2_InitForOpenGL(engine->window, engine->context);
-	ImGui_ImplOpenGL3_Init("#version 330");
-
-	bool show_demo_window = true;
+	GUI::initImgui(engine->window, engine->context);
 
 	float deltaTime, lastTime = 0.0f;
 
 	while (!engine->isShutDown())
 	{
 		// Start the Dear ImGui frame
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplSDL2_NewFrame(engine->window);
-		ImGui::NewFrame();
+		GUI::initImguiFrame(engine->window);
 
 		float currentTime = SDL_GetTicks();
 		deltaTime = currentTime - lastTime;
@@ -42,13 +30,10 @@ int main(int argc, char *argv[])
 		engine->update(deltaTime);
 		
 		// Rendering
-		ImGui::ShowDemoWindow(&show_demo_window);
-
-		ImGui::Render();
-		SDL_GL_MakeCurrent(engine->window, engine->context);
+		GUI::draw();
 
 		engine->render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		GUI::renderGUI();
 		
 		SDL_GL_SwapWindow(engine->window);
 	}
@@ -56,9 +41,7 @@ int main(int argc, char *argv[])
 	engine->shutDownSystem();
 
 	//imgui shutdown
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
+	GUI::cleanup();
 
 	return 0;
 }

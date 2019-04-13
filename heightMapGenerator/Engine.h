@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 #include <sdl/SDL.h>
-#include "OpenglSystem.h"
+#include "utilities/OpenglSystem.h"
 #include "uniform_buffers/UniformBufferMatrices.h"
 #include "CameraFP.h"
 

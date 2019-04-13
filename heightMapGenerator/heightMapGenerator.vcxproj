@@ -145,10 +145,11 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="stb_image.cpp" />
-    <ClCompile Include="OpenglSystem.cpp" />
     <ClCompile Include="Terrein.cpp" />
     <ClCompile Include="uniform_buffers\UniformBufferLight.cpp" />
     <ClCompile Include="uniform_buffers\UniformBufferMatrices.cpp" />
+    <ClCompile Include="utilities\GUI.cpp" />
+    <ClCompile Include="utilities\OpenglSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraFP.h" />
@@ -167,10 +168,11 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="stb_image.h" />
-    <ClInclude Include="OpenglSystem.h" />
     <ClInclude Include="Terrein.h" />
     <ClInclude Include="uniform_buffers\UniformBufferLight.h" />
     <ClInclude Include="uniform_buffers\UniformBufferMatrices.h" />
+    <ClInclude Include="utilities\GUI.h" />
+    <ClInclude Include="utilities\OpenglSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic.frag" />

@@ -22,7 +22,7 @@ public:
 	void mousePositionUpdate(float deltaTime, int x, int y);
 	glm::vec3 getCameraPosition();
 private:
-	float speed = 0.01f;
+	float speed = 0.05f;
 	float mouseSensitivity = 0.2f;
 	int screenWidthMid;
 	int screenHeightMid;

@@ -6,6 +6,9 @@
 
 const int width = 1280;
 const int height = 720;
+const int MINIMUM_FPS_FRAME = 10;
+float minimum_fps_delta_time = 1000 / MINIMUM_FPS_FRAME;
+float previous_timestep = SDL_GetTicks();
 Engine* engine = new Engine(width, height);
 
 int main(int argc, char *argv[])
@@ -20,22 +23,37 @@ int main(int argc, char *argv[])
 
 	while (!engine->isShutDown())
 	{
-		// Start the Dear ImGui frame
-		GUI::initImguiFrame(engine->window);
-
-		float currentTime = SDL_GetTicks();
-		deltaTime = currentTime - lastTime;
-		lastTime = currentTime;
-
-		engine->update(deltaTime);
+		float current_timestep = SDL_GetTicks();
 		
-		// Rendering
-		// GUI::draw();
+		if (previous_timestep < current_timestep) {
 
-		engine->render();
-		GUI::renderGUI();
-		
-		SDL_GL_SwapWindow(engine->window);
+			float deltaTime = current_timestep - previous_timestep;
+
+			std::cout << 1000.0/deltaTime << std::endl;
+
+			if (deltaTime > minimum_fps_delta_time) {
+				deltaTime = minimum_fps_delta_time; // slow down if the computer is too slow
+			}
+
+			// update
+			engine->update(deltaTime);
+
+			previous_timestep = current_timestep;
+
+			// render
+			GUI::initImguiFrame(engine->window);
+
+			// GUI::draw();
+
+			engine->render();
+			GUI::renderGUI();
+
+			SDL_GL_SwapWindow(engine->window);
+		}
+		else {
+			SDL_Delay(1);
+		}
+
 	}
 
 	engine->shutDownSystem();

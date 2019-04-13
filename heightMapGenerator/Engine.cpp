@@ -31,6 +31,13 @@ void Engine::initializeSystem()
 void Engine::shutDownSystem()
 {
 	OpenglSystem::cleanUp(this->context, this->window);
+	delete this->terrein;
+	delete this->camera;
+	delete this->input;
+	delete this->skybox;
+	delete this->light;
+	delete this->framebuffer;
+	delete this->uniformBufferMatrices;
 }
 
 void Engine::initialize()
@@ -94,16 +101,12 @@ void Engine::update(float deltaTime)
 
 void Engine::render()
 {
-	this->framebuffer->firstPass();
-	// OpenglSystem::enableWireframe(true);
-	OpenglSystem::enableCulling(true);
-	this->terrein->draw(*this->camera, this->light->getPosition());
-	OpenglSystem::enableCulling(false);
-	this->light->draw();
-	this->skybox->draw();
-	// OpenglSystem::enableWireframe(false);
-
-	this->framebuffer->secondPass();
+	this->framebuffer->beginDrawingSceneToColourTexture();
+		this->terrein->draw(*this->camera, this->light->getPosition());
+		this->light->draw();
+		this->skybox->draw();
+	this->framebuffer->BindToFrameBuffer();
+	
 	this->framebuffer->render();
 }
 
@@ -111,3 +114,4 @@ bool Engine::isShutDown()
 {
 	return this->shutDown;
 }
+

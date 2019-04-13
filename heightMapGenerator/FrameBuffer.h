@@ -12,8 +12,8 @@ public:
 	FrameBuffer(int screenWidth, int screenHeight);
 	~FrameBuffer();
 	void load();
-	void firstPass();
-	void secondPass();
+	void beginDrawingSceneToColourTexture();
+	void BindToFrameBuffer();
 	void render();
 private:
 	unsigned int VAO;

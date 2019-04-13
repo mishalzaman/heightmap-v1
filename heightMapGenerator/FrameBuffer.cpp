@@ -24,7 +24,7 @@ void FrameBuffer::load()
 	this->loadRenderBuffer();
 }
 
-void FrameBuffer::firstPass()
+void FrameBuffer::beginDrawingSceneToColourTexture()
 {
 	// bind to framebuffer and draw scene as we normally would to color texture 
 	glBindFramebuffer(GL_FRAMEBUFFER, this->FBO);
@@ -36,7 +36,7 @@ void FrameBuffer::firstPass()
 	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
 }
 
-void FrameBuffer::secondPass()
+void FrameBuffer::BindToFrameBuffer()
 {
 	// now bind back to default framebuffer and draw a quad plane with the attached framebuffer color texture
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

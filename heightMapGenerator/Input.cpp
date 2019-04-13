@@ -27,6 +27,8 @@ void Input::update(float deltaTime)
 			if (event.key.keysym.sym == SDLK_DOWN && event.key.repeat == 0) { this->arrowBackward = true; }
 			if (event.key.keysym.sym == SDLK_LEFT && event.key.repeat == 0) { this->arrowLeft = true; }
 			if (event.key.keysym.sym == SDLK_RIGHT && event.key.repeat == 0) { this->arrowRight = true; }
+
+			// quit
 			if (event.key.keysym.sym == SDLK_ESCAPE) { this->quit = true; }
 			break;
 		case SDL_KEYUP:
@@ -39,7 +41,6 @@ void Input::update(float deltaTime)
 			if (event.key.keysym.sym == SDLK_DOWN && event.key.repeat == 0) { this->arrowBackward = false; }
 			if (event.key.keysym.sym == SDLK_LEFT && event.key.repeat == 0) { this->arrowLeft = false; }
 			if (event.key.keysym.sym == SDLK_RIGHT && event.key.repeat == 0) { this->arrowRight = false; }
-			break;
 		case SDL_MOUSEMOTION:
 			this->mouseMotion = true;
 		default:
@@ -66,5 +67,6 @@ bool Input::isMouseMotion()
 
 	return false;
 }
+bool Input::isTab() { return this->tab; }
 bool Input::isQuit() { return this->quit; }
 

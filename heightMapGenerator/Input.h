@@ -22,6 +22,7 @@ public:
 	bool isArrowLeft();
 	bool isArrowRight();
 	bool isMouseMotion();
+	bool isTab();
 	bool isQuit();
 private:
 	SDL_Event event;
@@ -34,6 +35,7 @@ private:
 	bool arrowLeft = false;
 	bool arrowRight = false;
 	bool mouseMotion = false;
+	bool tab = false;
 	bool quit = false;
 };
 

@@ -1,6 +1,7 @@
 #include <sdl/SDL.h>
 #include "Terrein.h"
 #include "Shader.h"
+#include "utilities/OpenglSystem.h"
 
 using namespace std;
 
@@ -138,8 +139,9 @@ void Terrein::draw(CameraFP &camera, glm::vec3 lampPosition)
 	this->shader->setVec3("lightPos", lampPosition);
 	this->shader->setVec3("objectColor", glm::vec3(0.4f, 0.4f, 0.4f));
 
-	//glDrawArrays(GL_TRIANGLES, 0, 6);
+	OpenglSystem::enableCulling(true);
 	glDrawElements(GL_TRIANGLES, (GLsizei)this->indices.size() * 3, GL_UNSIGNED_INT, 0);
+	OpenglSystem::enableCulling(false);
 }
 
 void Terrein::cleanup()

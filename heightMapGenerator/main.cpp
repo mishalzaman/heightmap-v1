@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 		engine->update(deltaTime);
 		
 		// Rendering
-		GUI::draw();
+		// GUI::draw();
 
 		engine->render();
 		GUI::renderGUI();

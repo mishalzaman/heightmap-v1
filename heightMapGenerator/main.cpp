@@ -6,7 +6,7 @@
 
 const int width = 1280;
 const int height = 720;
-const int MINIMUM_FPS_FRAME = 10;
+const int MINIMUM_FPS_FRAME = 6;
 float minimum_fps_delta_time = 1000 / MINIMUM_FPS_FRAME;
 float previous_timestep = SDL_GetTicks();
 Engine* engine = new Engine(width, height);
@@ -28,8 +28,6 @@ int main(int argc, char *argv[])
 		if (previous_timestep < current_timestep) {
 
 			float deltaTime = current_timestep - previous_timestep;
-
-			std::cout << 1000.0/deltaTime << std::endl;
 
 			if (deltaTime > minimum_fps_delta_time) {
 				deltaTime = minimum_fps_delta_time; // slow down if the computer is too slow

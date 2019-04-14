@@ -56,7 +56,7 @@ void Engine::load()
 	this->projection = glm::perspective(glm::radians(45.0f), (float)this->screenWidth / (float)this->screenHeight, 0.1f, 100.0f);
 	this->uniformBufferMatrices->updateUBOMatricesProjection(projection);
 	this->skybox->load();
-	this->terrein->load(388);
+	this->terrein->load();
 	this->light->load();
 	this->framebuffer->load();
 }

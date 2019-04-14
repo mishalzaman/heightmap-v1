@@ -13,7 +13,7 @@ class Shader;
 
 struct MeshV3 {
 	glm::vec3 position;
-	glm::vec3 normal;
+	glm::vec3 normal = glm::vec3(0,0,0);
 };
 
 class Terrein
@@ -21,7 +21,7 @@ class Terrein
 public:
 	Terrein();
 	~Terrein();
-	void load(unsigned int mapSize);
+	void load();
 	void draw(CameraFP &camera, glm::vec3 lampPosition);
 	void cleanup();
 	void setScale(float scale);
@@ -36,7 +36,7 @@ private:
 	unsigned char *imageData;
 	int imageWidth;
 	int imageHeight;
-	float scale = -0.32;
+	float scale = 0.32;
 	Shader* shader;
 	void build();
 	void getHeightMapImageData();

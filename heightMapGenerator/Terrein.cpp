@@ -16,7 +16,7 @@ Terrein::~Terrein()
 	this->cleanup();
 }
 
-void Terrein::load(unsigned int mapSize)
+void Terrein::load()
 {
 	this->mapSize = mapSize;
 
@@ -30,15 +30,15 @@ void Terrein::build()
 	// https://stackoverflow.com/questions/47086858/create-a-grid-in-opengl
 	// https://www.learnopengles.com/tag/height-maps/
 
-	cout << this->imageWidth << endl;
-	cout << this->imageHeight << endl;
+	printf("image width %d\n", this->imageWidth);
+	printf("image height %d\n", this->imageHeight);
 
-	for (int i = 0; i <= this->mapSize; ++i)
+	for (int i = 0; i <= this->imageHeight; ++i)
 	{
-		for (int j = 0; j <= this->mapSize; ++j)
+		for (int j = 0; j <= this->imageWidth; ++j)
 		{
-			float x = (float)j / (float)this->mapSize;
-			float y = (float)i / (float)this->mapSize;
+			float x = (float)j / (float)this->imageWidth;
+			float y = (float)i / (float)this->imageWidth;
 
 			float pixel = this->imageData[this->imageWidth * j + i];
 
@@ -49,23 +49,27 @@ void Terrein::build()
 			mesh.normal = glm::vec3(0.0, 0.0, 0.0);
 
 			this->mesh.push_back(mesh);
+
+			// printf("%d,%d,%d\n", mesh.position.x, mesh.position.y, mesh.position.z);
 		}
 	}
 
-	for (int j = 0; j < this->mapSize; ++j)
+	bool show = true;
+
+	for (int j = 0; j < this->imageHeight; ++j)
 	{
-		for (int i = 0; i < this->mapSize; ++i)
+		for (int i = 0; i < this->imageWidth; ++i)
 		{
-			int row1 = j * (this->mapSize + 1);
-			int row2 = (j + 1) * (this->mapSize + 1);
+			int row1 = j * (this->imageWidth + 1);
+			int row2 = (j + 1) * (this->imageWidth + 1);
 
 			// triangle 1
 			this->indices.push_back(glm::uvec3(row1 + i, row1 + i + 1, row2 + i + 1));
-			// printf("%d,%d,%d\n", row1 + i, row1 + i + 1, row2 + i + 1);
+			// if (show) printf("%d,%d,%d\n", row1 + i, row1 + i + 1, row2 + i + 1);
 
 			// triangle 2
 			this->indices.push_back(glm::uvec3(row1 + i, row2 + i + 1, row2 + i));
-			// printf("%d,%d,%d\n", row1 + i, row2 + i + 1, row2 + i);
+			// if (show) printf("%d,%d,%d\n", row1 + i, row2 + i + 1, row2 + i);
 		}
 	}
 
@@ -83,6 +87,9 @@ void Terrein::build()
 		this->mesh[this->indices[i].y].normal += normal;
 		this->mesh[this->indices[i].z].normal += normal;
 	}
+
+	printf("mesh size %d\n", this->mesh.size());
+	printf("indices size %d\n", this->indices.size());
 
 	glGenVertexArrays(1, &this->VAO);
 	glGenBuffers(1, &this->VBO);

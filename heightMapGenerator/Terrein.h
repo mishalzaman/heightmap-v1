@@ -36,7 +36,7 @@ private:
 	unsigned char *imageData;
 	int imageWidth;
 	int imageHeight;
-	float scale = 0.32;
+	float scale = -0.1;
 	Shader* shader;
 	void build();
 	void getHeightMapImageData();

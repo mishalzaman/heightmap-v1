@@ -40,10 +40,15 @@ void Terrein::build()
 			float x = (float)j / (float)this->imageWidth;
 			float y = (float)i / (float)this->imageWidth;
 
-			float pixel = this->imageData[this->imageWidth * j + i];
+			float pixel = this->imageData[this->imageWidth * i + j];
+			// image[w * y + x];
 
-			float z = pixel == 0.0 ? 0.0 : float(pixel / 256.0)*this->scale;
-	
+			float z;
+			if (i == this->imageHeight || j == this->imageWidth || i == 0 || j == 0) { z = 0.0f; }
+			else { z = float(pixel / 256.0)*this->scale; }
+			
+
+
 			MeshV3 mesh;
 			mesh.position = glm::vec3(x, y, z);
 			mesh.normal = glm::vec3(0.0, 0.0, 0.0);
@@ -53,8 +58,6 @@ void Terrein::build()
 			// printf("%d,%d,%d\n", mesh.position.x, mesh.position.y, mesh.position.z);
 		}
 	}
-
-	bool show = true;
 
 	for (int j = 0; j < this->imageHeight; ++j)
 	{
@@ -119,7 +122,8 @@ void Terrein::build()
 void Terrein::getHeightMapImageData()
 {
 	std::string path = "assets/hm.png";
-	this->imageData = stbi_load(path.c_str(), &this->imageWidth, &this->imageHeight, NULL, 1);
+	int nChannels;
+	this->imageData = stbi_load(path.c_str(), &this->imageWidth, &this->imageHeight, &nChannels, 1);
 
 	if (!imageData)
 	{
@@ -164,6 +168,8 @@ void Terrein::cleanup()
 	if (this->VAO) {
 		glDeleteVertexArrays(1, &this->VAO);
 	}
+
+	delete this->shader;
 }
 
 void Terrein::setScale(float scale)

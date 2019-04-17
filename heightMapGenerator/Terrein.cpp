@@ -21,6 +21,7 @@ void Terrein::load()
 	this->mapSize = mapSize;
 
 	this->getHeightMapImageData();
+	this->getDIffuseMap();
 	this->build();
 	stbi_image_free(this->imageData);
 }
@@ -44,14 +45,19 @@ void Terrein::build()
 			// image[w * y + x];
 
 			float z;
-			if (i == this->imageHeight || j == this->imageWidth || i == 0 || j == 0) { z = 0.0f; }
-			else { z = float(pixel / 256.0)*this->scale; }
+			if (i == this->imageHeight || j == this->imageWidth || i == 0 || j == 0)
+			{
+				z = 0.0f;
+			}
+			else
+			{
+				z = float(pixel / 256.0)*this->scale; 
+			}
 			
-
-
 			MeshV3 mesh;
 			mesh.position = glm::vec3(x, y, z);
 			mesh.normal = glm::vec3(0.0, 0.0, 0.0);
+			mesh.texture = glm::vec2(x, y);
 
 			this->mesh.push_back(mesh);
 
@@ -107,12 +113,16 @@ void Terrein::build()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(glm::uvec3), glm::value_ptr(this->indices[0]), GL_STATIC_DRAW);
 
 	// positions
-	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshV3), (void*)0);
+	glEnableVertexAttribArray(0);
 
 	// normals
-	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(MeshV3), (void*)offsetof(MeshV3, normal));
+	glEnableVertexAttribArray(1);
+
+	// textures
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(MeshV3), (void*)offsetof(MeshV3, texture));
+	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -131,11 +141,40 @@ void Terrein::getHeightMapImageData()
 	}
 }
 
+void Terrein::getDIffuseMap()
+{
+	glGenTextures(1, &this->texture);
+	glBindTexture(GL_TEXTURE_2D, this->texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	// load image, create texture and generate mipmaps
+	int width, height, nrChannels;
+	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+
+	std::string path = "assets/diffuse.png";
+	unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load diffuse texture" << std::endl;
+	}
+	stbi_image_free(data);
+}
+
 void Terrein::draw(CameraFP &camera, glm::vec3 lampPosition)
 {
 	// http://www.rastertek.com/dx11ter02.html
 	float scale = 32.0;
 
+	glBindTexture(GL_TEXTURE_2D, this->texture);
 	this->shader->use();
 	glBindVertexArray(this->VAO);
 	glm::mat4 model = glm::mat4(1.0f);

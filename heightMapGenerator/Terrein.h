@@ -43,7 +43,9 @@ private:
 	void getHeightMapImageData();
 
 	unsigned int texture;
+	unsigned char* diffuseData;
 	void getDIffuseMap();
+
 };
 
 #endif

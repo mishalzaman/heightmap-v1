@@ -24,6 +24,7 @@ void Terrein::load()
 	this->getDIffuseMap();
 	this->build();
 	stbi_image_free(this->imageData);
+	stbi_image_free(this->diffuseData);
 }
 
 void Terrein::build()
@@ -34,12 +35,12 @@ void Terrein::build()
 	printf("image width %d\n", this->imageWidth);
 	printf("image height %d\n", this->imageHeight);
 
-	for (int i = 0; i <= this->imageHeight; ++i)
+	for (int i = 0; i <= this->imageHeight; i++)
 	{
-		for (int j = 0; j <= this->imageWidth; ++j)
+		for (int j = 0; j <= this->imageWidth; j++)
 		{
 			float x = (float)j / (float)this->imageWidth;
-			float y = (float)i / (float)this->imageWidth;
+			float y = (float)i / (float)this->imageHeight;
 
 			float pixel = this->imageData[this->imageWidth * i + j];
 			// image[w * y + x];
@@ -57,17 +58,15 @@ void Terrein::build()
 			MeshV3 mesh;
 			mesh.position = glm::vec3(x, y, z);
 			mesh.normal = glm::vec3(0.0, 0.0, 0.0);
-			mesh.texture = glm::vec2(x, y);
-
+			
 			this->mesh.push_back(mesh);
-
-			// printf("%d,%d,%d\n", mesh.position.x, mesh.position.y, mesh.position.z);
+			
 		}
 	}
 
-	for (int j = 0; j < this->imageHeight; ++j)
+	for (int j = 0; j < this->imageHeight; j++)
 	{
-		for (int i = 0; i < this->imageWidth; ++i)
+		for (int i = 0; i < this->imageWidth; i++)
 		{
 			int row1 = j * (this->imageWidth + 1);
 			int row2 = (j + 1) * (this->imageWidth + 1);
@@ -81,7 +80,7 @@ void Terrein::build()
 			// if (show) printf("%d,%d,%d\n", row1 + i, row2 + i + 1, row2 + i);
 		}
 	}
-
+	
 	for (int i = 0; i < this->indices.size(); i++)
 	{
 		glm::vec3 v1 = this->mesh[this->indices[i].x].position;
@@ -131,7 +130,7 @@ void Terrein::build()
 
 void Terrein::getHeightMapImageData()
 {
-	std::string path = "assets/hm.png";
+	std::string path = "assets/Heightmap.png";
 	int nChannels;
 	this->imageData = stbi_load(path.c_str(), &this->imageWidth, &this->imageHeight, &nChannels, 1);
 
@@ -155,18 +154,17 @@ void Terrein::getDIffuseMap()
 	int width, height, nrChannels;
 	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
 
-	std::string path = "assets/diffuse.png";
-	unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
-	if (data)
+	std::string path = "assets/Heightmap.png";
+	this->diffuseData = stbi_load(path.c_str(), &width, &height, &nrChannels, 1);
+	if (this->diffuseData)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, this->diffuseData);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 	{
 		std::cout << "Failed to load diffuse texture" << std::endl;
 	}
-	stbi_image_free(data);
 }
 
 void Terrein::draw(CameraFP &camera, glm::vec3 lampPosition)

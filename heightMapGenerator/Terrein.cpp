@@ -35,49 +35,46 @@ void Terrein::build()
 	printf("image width %d\n", this->imageWidth);
 	printf("image height %d\n", this->imageHeight);
 
-	for (int i = 0; i <= this->imageHeight; i++)
+	for (int row = 0; row <= this->imageHeight; row++)
 	{
-		for (int j = 0; j <= this->imageWidth; j++)
+		for (int column = 0; column <= this->imageWidth; column++)
 		{
-			float x = (float)j / (float)this->imageWidth;
-			float y = (float)i / (float)this->imageHeight;
-
-			float pixel = this->imageData[this->imageWidth * i + j];
-			// image[w * y + x];
+			float x = (float)column / (float)this->imageWidth;
+			float y = (float)row / (float)this->imageHeight;
 
 			float z;
-			if (i == this->imageHeight || j == this->imageWidth || i == 0 || j == 0)
+			if (row == this->imageHeight || column == this->imageWidth || row == 0 || column == 0)
 			{
 				z = 0.0f;
 			}
 			else
 			{
+				float pixel = this->imageData[this->imageWidth * row + column];
 				z = float(pixel / 256.0)*this->scale; 
 			}
 			
 			MeshV3 mesh;
 			mesh.position = glm::vec3(x, y, z);
 			mesh.normal = glm::vec3(0.0, 0.0, 0.0);
+			mesh.texture = glm::vec2(x, y);
 			
 			this->mesh.push_back(mesh);
 			
 		}
 	}
 
-	for (int j = 0; j < this->imageHeight; j++)
+	for (int row = 0; row < this->imageHeight; row++)
 	{
-		for (int i = 0; i < this->imageWidth; i++)
+		for (int column = 0; column < this->imageWidth; column++)
 		{
-			int row1 = j * (this->imageWidth + 1);
-			int row2 = (j + 1) * (this->imageWidth + 1);
+			int row1 = row * (this->imageWidth + 1);
+			int row2 = (row + 1) * (this->imageWidth + 1);
 
 			// triangle 1
-			this->indices.push_back(glm::uvec3(row1 + i, row1 + i + 1, row2 + i + 1));
-			// if (show) printf("%d,%d,%d\n", row1 + i, row1 + i + 1, row2 + i + 1);
+			this->indices.push_back(glm::uvec3(row1 + column, row1 + column + 1, row2 + column + 1));
 
 			// triangle 2
-			this->indices.push_back(glm::uvec3(row1 + i, row2 + i + 1, row2 + i));
-			// if (show) printf("%d,%d,%d\n", row1 + i, row2 + i + 1, row2 + i);
+			this->indices.push_back(glm::uvec3(row1 + column, row2 + column + 1, row2 + column));
 		}
 	}
 	
@@ -130,7 +127,7 @@ void Terrein::build()
 
 void Terrein::getHeightMapImageData()
 {
-	std::string path = "assets/Heightmap.png";
+	std::string path = "assets/hm.png";
 	int nChannels;
 	this->imageData = stbi_load(path.c_str(), &this->imageWidth, &this->imageHeight, &nChannels, 1);
 
@@ -148,17 +145,18 @@ void Terrein::getDIffuseMap()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	// set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// load image, create texture and generate mipmaps
 	int width, height, nrChannels;
 	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
 
-	std::string path = "assets/Heightmap.png";
-	this->diffuseData = stbi_load(path.c_str(), &width, &height, &nrChannels, 1);
+	std::string path = "assets/diffuse.jpg";
+	this->diffuseData = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 	if (this->diffuseData)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, this->diffuseData);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->diffuseData);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else

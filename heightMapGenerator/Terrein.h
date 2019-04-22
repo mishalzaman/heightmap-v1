@@ -26,6 +26,8 @@ public:
 	void draw(CameraFP &camera, glm::vec3 lampPosition);
 	void cleanup();
 	void setScale(float scale);
+	int getWidth();
+	int getHeight();
 private:
 	unsigned int mapSize;
 	std::vector<glm::uvec3> indices;

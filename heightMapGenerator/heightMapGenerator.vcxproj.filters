@@ -25,6 +25,12 @@
     <Filter Include="utilities">
       <UniqueIdentifier>{fb0c5700-de60-415b-8cb3-b8465a82f087}</UniqueIdentifier>
     </Filter>
+    <Filter Include="primitives">
+      <UniqueIdentifier>{1c87bff2-9a7c-4846-a184-fc9cdf0c4743}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="structs">
+      <UniqueIdentifier>{9dc1f846-e04a-45a4-89f7-7034af2080d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -86,6 +92,12 @@
     </ClCompile>
     <ClCompile Include="utilities\GUI.cpp">
       <Filter>utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\Plane.cpp">
+      <Filter>primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +163,15 @@
     </ClInclude>
     <ClInclude Include="utilities\GUI.h">
       <Filter>utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\Plane.h">
+      <Filter>primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

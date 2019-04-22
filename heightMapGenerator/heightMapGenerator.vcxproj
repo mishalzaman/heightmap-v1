@@ -142,6 +142,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="primitives\Plane.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="stb_image.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="uniform_buffers\UniformBufferMatrices.cpp" />
     <ClCompile Include="utilities\GUI.cpp" />
     <ClCompile Include="utilities\OpenglSystem.cpp" />
+    <ClCompile Include="Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraFP.h" />
@@ -165,6 +167,8 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Plane.h" />
+    <ClInclude Include="primitives\Plane.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="stb_image.h" />
@@ -173,6 +177,7 @@
     <ClInclude Include="uniform_buffers\UniformBufferMatrices.h" />
     <ClInclude Include="utilities\GUI.h" />
     <ClInclude Include="utilities\OpenglSystem.h" />
+    <ClInclude Include="Water.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic.frag" />

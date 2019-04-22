@@ -4,6 +4,7 @@
 #include "SkyBox.h"
 #include "Light.h"
 #include "FrameBuffer.h"
+#include "Water.h"
 
 Engine::Engine(unsigned int width, unsigned int height)
 {
@@ -48,6 +49,7 @@ void Engine::initialize()
 	this->camera = new CameraFP(this->screenWidth, this->screenHeight);
 	this->skybox = new SkyBox();
 	this->light = new Light(glm::vec3(40, 10, 40));
+	this->water = new Water("shaders/basic.vert", "shaders/basic.frag");
 	this->framebuffer = new FrameBuffer(this->screenWidth, this->screenHeight);
 }
 
@@ -57,6 +59,7 @@ void Engine::load()
 	this->uniformBufferMatrices->updateUBOMatricesProjection(projection);
 	this->skybox->load();
 	this->terrein->load();
+	this->water->load(this->terrein->getWidth(), this->terrein->getHeight());
 	this->light->load();
 	this->framebuffer->load();
 }
@@ -103,6 +106,7 @@ void Engine::render()
 {
 	this->framebuffer->beginDrawingSceneToColourTexture();
 		this->terrein->draw(*this->camera, this->light->getPosition());
+		this->water->draw();
 		this->light->draw();
 		this->skybox->draw();
 	this->framebuffer->BindToFrameBuffer();

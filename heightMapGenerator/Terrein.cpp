@@ -211,3 +211,13 @@ void Terrein::setScale(float scale)
 {
 	this->scale = scale;
 }
+
+int Terrein::getWidth()
+{
+	return this->imageWidth;
+}
+
+int Terrein::getHeight()
+{
+	return this->imageHeight;
+}

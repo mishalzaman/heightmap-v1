@@ -13,6 +13,7 @@ class UniformBufferMatrices;
 class CameraFP;
 class SkyBox;
 class Light;
+class Water;
 class FrameBuffer;
 
 class Engine
@@ -40,6 +41,7 @@ private:
 	CameraFP* camera;
 	SkyBox* skybox;
 	Light* light;
+	Water* water;
 	FrameBuffer* framebuffer;
 	glm::mat4 projection;
 	glm::mat4 view;

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <sdl/SDL.h>
+#include "utilities/OpenglSystem.h"
 #include "Engine.h"
 #include "utilities/GUI.h"
 
@@ -9,19 +10,29 @@ const int height = 720;
 const int MINIMUM_FPS_FRAME = 6;
 float minimum_fps_delta_time = 1000 / MINIMUM_FPS_FRAME;
 float previous_timestep = SDL_GetTicks();
-Engine* engine = new Engine(width, height);
+Engine engine = Engine(width, height);
 
 int main(int argc, char *argv[])
 {
-	engine->initializeSystem();
-	engine->initialize();
-	engine->load();
+	// Initialize OpenGl/SDL subsystem
+	OpenglSystem::initSDL();
+	SDL_Window* window = OpenglSystem::initWindow(width, height);
+	SDL_GLContext context = OpenglSystem::initContext(window);
+	OpenglSystem::initGlew();
+	OpenglSystem::initGlAttributes(3, 3);
+	OpenglSystem::enableMouseCursor(false);
+	OpenglSystem::enableMouseCapture(true);
+	OpenglSystem::setMouseToCenter(window, width, height);
+	OpenglSystem::enableDepthTest(true);
 
-	GUI::initImgui(engine->window, engine->context);
+	engine.initialize(window);
+	engine.load();
+
+	GUI::initImgui(window, context);
 
 	float deltaTime, lastTime = 0.0f;
 
-	while (!engine->isShutDown())
+	while (!engine.isShutDown())
 	{
 		float current_timestep = SDL_GetTicks();
 		
@@ -34,19 +45,19 @@ int main(int argc, char *argv[])
 			}
 
 			// update
-			engine->update(deltaTime);
+			engine.update(deltaTime);
 
 			previous_timestep = current_timestep;
 
 			// render
-			GUI::initImguiFrame(engine->window);
+			GUI::initImguiFrame(window);
 
 			// GUI::draw();
 
-			engine->render();
+			engine.render();
 			GUI::renderGUI();
 
-			SDL_GL_SwapWindow(engine->window);
+			SDL_GL_SwapWindow(window);
 		}
 		else {
 			SDL_Delay(1);
@@ -54,9 +65,8 @@ int main(int argc, char *argv[])
 
 	}
 
-	engine->shutDownSystem();
-
-	//imgui shutdown
+	engine.cleanUp();
+	OpenglSystem::cleanUp(context, window);
 	GUI::cleanup();
 
 	return 0;

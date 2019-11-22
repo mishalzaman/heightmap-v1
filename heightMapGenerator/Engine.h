@@ -21,27 +21,24 @@ class Engine
 public:
 	Engine(unsigned int width, unsigned int height);
 	~Engine();
-	void initializeSystem();
-	void shutDownSystem();
-	void initialize();
+	void cleanUp();
+	void initialize(SDL_Window* window);
 	void load();
 	void update(float deltaTime);
 	void render();
 	bool isShutDown();
-	SDL_Window* window;
-	SDL_GLContext context;
 	Input* input;
 private:
 	// properties
 	unsigned int screenWidth;
 	unsigned int screenHeight;
 	bool shutDown = false;
+	SDL_Window* window;
 	Terrein* terrein;
 	UniformBufferMatrices* uniformBufferMatrices;
 	CameraFP* camera;
 	SkyBox* skybox;
 	Light* light;
-	Water* water;
 	FrameBuffer* framebuffer;
 	glm::mat4 projection;
 	glm::mat4 view;

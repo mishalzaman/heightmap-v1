@@ -8,6 +8,7 @@
 #include <vector>
 #include "stb_image.h"
 #include "CameraFP.h"
+#include "Shader.h"
 
 class Shader;
 
@@ -39,8 +40,8 @@ private:
 	unsigned char *imageData;
 	int imageWidth;
 	int imageHeight;
-	float scale = -0.2;
-	Shader* shader;
+	float scale = -1.0f;
+	Shader shader;
 	void build();
 	void getHeightMapImageData();
 

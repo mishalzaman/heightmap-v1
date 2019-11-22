@@ -4,7 +4,6 @@
 #include "SkyBox.h"
 #include "Light.h"
 #include "FrameBuffer.h"
-#include "Water.h"
 
 Engine::Engine(unsigned int width, unsigned int height)
 {
@@ -16,22 +15,8 @@ Engine::~Engine()
 {
 }
 
-void Engine::initializeSystem()
+void Engine::cleanUp()
 {
-	OpenglSystem::initSDL();
-	this->window = OpenglSystem::initWindow(this->screenWidth, this->screenHeight);
-	this->context = OpenglSystem::initContext(this->window);
-	OpenglSystem::initGlew();
-	OpenglSystem::initGlAttributes(3, 3);
-	OpenglSystem::enableMouseCursor(false);
-	OpenglSystem::enableMouseCapture(true);
-	OpenglSystem::setMouseToCenter(this->window, this->screenWidth, this->screenHeight);
-	OpenglSystem::enableDepthTest(true);
-}
-
-void Engine::shutDownSystem()
-{
-	OpenglSystem::cleanUp(this->context, this->window);
 	delete this->terrein;
 	delete this->camera;
 	delete this->input;
@@ -41,15 +26,15 @@ void Engine::shutDownSystem()
 	delete this->uniformBufferMatrices;
 }
 
-void Engine::initialize()
+void Engine::initialize(SDL_Window* window)
 {
+	this->window = window;
 	this->terrein = new Terrein();
 	this->input = new Input();
 	this->uniformBufferMatrices = new UniformBufferMatrices();
 	this->camera = new CameraFP(this->screenWidth, this->screenHeight);
 	this->skybox = new SkyBox();
 	this->light = new Light(glm::vec3(40, 10, 40));
-	this->water = new Water("shaders/basic.vert", "shaders/basic.frag");
 	this->framebuffer = new FrameBuffer(this->screenWidth, this->screenHeight);
 }
 
@@ -59,7 +44,6 @@ void Engine::load()
 	this->uniformBufferMatrices->updateUBOMatricesProjection(projection);
 	this->skybox->load();
 	this->terrein->load();
-	this->water->load(this->terrein->getWidth(), this->terrein->getHeight());
 	this->light->load();
 	this->framebuffer->load();
 }
@@ -106,7 +90,6 @@ void Engine::render()
 {
 	this->framebuffer->beginDrawingSceneToColourTexture();
 		this->terrein->draw(*this->camera, this->light->getPosition());
-		this->water->draw();
 		this->light->draw();
 		this->skybox->draw();
 	this->framebuffer->BindToFrameBuffer();

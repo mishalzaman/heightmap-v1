@@ -1,14 +1,13 @@
 #include <sdl/SDL.h>
 #include "Terrein.h"
-#include "Shader.h"
+
 #include "utilities/OpenglSystem.h"
 
 using namespace std;
 
-Terrein::Terrein()
+Terrein::Terrein(): shader("shaders/material.vert", "shaders/material.frag")
 {
-	this->shader = new Shader("shaders/material.vert", "shaders/material.frag");
-	this->shader->setUBOMatrices();
+	this->shader.setUBOMatrices();
 }
 
 Terrein::~Terrein()
@@ -127,7 +126,7 @@ void Terrein::build()
 
 void Terrein::getHeightMapImageData()
 {
-	std::string path = "assets/hm.png";
+	std::string path = "assets/test_heightmap.bmp";
 	int nChannels;
 	this->imageData = stbi_load(path.c_str(), &this->imageWidth, &this->imageHeight, &nChannels, 1);
 
@@ -151,7 +150,7 @@ void Terrein::getDIffuseMap()
 	int width, height, nrChannels;
 	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
 
-	std::string path = "assets/diffuse.jpg";
+	std::string path = "assets/test_diffuse.png";
 	this->diffuseData = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 	if (this->diffuseData)
 	{
@@ -171,19 +170,19 @@ void Terrein::draw(CameraFP &camera, glm::vec3 lampPosition)
 	float scale = 32.0;
 
 	glBindTexture(GL_TEXTURE_2D, this->texture);
-	this->shader->use();
+	this->shader.use();
 	glBindVertexArray(this->VAO);
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0, 0.0, 0.0));
 	model = glm::scale(model, glm::vec3(scale, scale, scale));
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0.0));
-	this->shader->setMat4("model", model);
+	this->shader.setMat4("model", model);
 
 	// light properties
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-	this->shader->setVec3("lightColor", lightColor);
-	this->shader->setVec3("lightPos", lampPosition);
-	this->shader->setVec3("objectColor", glm::vec3(0.4f, 0.4f, 0.4f));
+	this->shader.setVec3("lightColor", lightColor);
+	this->shader.setVec3("lightPos", lampPosition);
+	this->shader.setVec3("objectColor", glm::vec3(0.4f, 0.4f, 0.4f));
 
 	OpenglSystem::enableCulling(true);
 	glDrawElements(GL_TRIANGLES, (GLsizei)this->indices.size() * 3, GL_UNSIGNED_INT, 0);
@@ -203,8 +202,6 @@ void Terrein::cleanup()
 	if (this->VAO) {
 		glDeleteVertexArrays(1, &this->VAO);
 	}
-
-	delete this->shader;
 }
 
 void Terrein::setScale(float scale)
